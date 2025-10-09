@@ -2,8 +2,7 @@ import {
   KEYWORDS, TYPES, isLetter, isDigit, isIdChar, MULTI_OPS, SINGLE_OPS, DELIMITERS, 
   ERROR_MESSAGES, isValidType, isValidKeyword 
 } from "./grammar.js";
-import { TokenType } from "./tokenTypes.js";
-
+import { TokenType } from "./tokenTypes.js"; 
 export function lex(input) {
   const tokens = [];
   let i = 0, line = 1, col = 1;
@@ -31,13 +30,11 @@ export function lex(input) {
     // Espacios en blanco
     if (/\s/.test(ch)) { advance(); continue; }
 
-    // Comentarios de una línea (//comentario//)
     if (ch === "/" && peek(1) === "/") {
       let lexeme = "";
-      advance(); advance(); // Consume "//"
+      advance(); advance(); 
       lexeme = "//";
       
-      // Lee hasta el final de la línea o hasta "//" de cierre
       while (i < input.length && peek() !== "\n") {
         lexeme += advance();
       }
@@ -46,21 +43,18 @@ export function lex(input) {
       continue;
     }
 
-    // Identificadores y palabras clave
     if (isLetter(ch)) {
       let lexeme = "";
       while (isIdChar(peek())) lexeme += advance();
       if (lexeme.length === 0) lexeme = advance();
       
       if (KEYWORDS.has(lexeme)) {
-        // Validar si es tipo de dato
         if (TYPES.has(lexeme)) {
           push(TokenType.TYPE, lexeme, startLine, startCol);
         } else {
           push(TokenType.KEYWORD, lexeme, startLine, startCol);
         }
       } else {
-        // Validar identificador (no puede empezar con número)
         if (/^[0-9]/.test(lexeme)) {
           push(TokenType.ERROR, lexeme, startLine, startCol, ERROR_MESSAGES.INVALID_IDENTIFIER(lexeme));
         } else {
@@ -70,13 +64,11 @@ export function lex(input) {
       continue;
     }
 
-    // Números
     if (isDigit(ch)) {
       let lexeme = "";
       while (isDigit(peek())) lexeme += advance();
       if (lexeme.length === 0) lexeme = advance();
       
-      // Verificar si después del número viene una letra (error)
       if (isLetter(peek())) {
         let invalidNum = lexeme;
         while (isIdChar(peek())) invalidNum += advance();
