@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analizador Léxico</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Analizador Léxico</h1>
+  </header>
+
+  <main>
+    <textarea id="source" placeholder="Escribe tu código aquí..."></textarea>
+    <div class="controls">
+      <button id="analyze">Analizar</button>
+      <button id="clear">Limpiar</button>
+    </div>
+    <div id="errorBox" style="display:none; color:#ff6b6b; margin-top:10px; font-weight:bold;"></div>
+    <table id="tokens">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tipo</th>
+          <th>Lexema</th>
+          <th>Línea</th>
+          <th>Columna</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <script type="module" src="./src/js/app.js"></script>
+</body>
+</html>
