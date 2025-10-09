@@ -19,16 +19,14 @@ export const ERROR_MESSAGES = {
   MISSING_BRACKET: () => 'Se esperaba ]'
 };
 
-// Gramática según el PDF
 export const GRAMMAR_RULES = {
-  // Programa
   Program: ['DeciFunList EOF'],
   
   // Declaraciones y funciones
   DeciFunList: ['DeciFun DeciFunList', 'ε'],
   DeciFun: ['Deci', 'FunDef'],
   Decl: ['Type ID ArrOpt DeciTail'],
-  DeciTail: ['Expf', '💡'], // 💡 probablemente significa asignación
+  DeciTail: ['Expf', '💡'], 
   ArrOpt: ["'[' NUM ']' ArrOpt", 'ε'],
   FunDef: ["Type ID '(' ParamListOpt ')' Block"],
   ParamListOpt: ['ParamList', 'ε'],
@@ -37,7 +35,6 @@ export const GRAMMAR_RULES = {
   Param: ['Type ID ArrOpt'],
   Type: ['int', 'bool', 'void'],
   
-  // Bloques y statements
   Block: ["'{' StmtList '}'"],
   StmtList: ['Stmt StmtList', 'ε'],
   Stmt: [
@@ -53,7 +50,7 @@ export const GRAMMAR_RULES = {
   ],
   
   // Statements específicos
-  ExprStmt: ['Expr;', ';'], // Expr↗ probablemente significa expresión con ;
+  ExprStmt: ['Expr;', ';'], 
   IfStmt: ["if '(' Expr ')' Stmt ElseOpt"],
   ElseOpt: ['else Stmt', 'ε'],
   WhileStmt: ["while '(' Expr ')' Stmt"],
