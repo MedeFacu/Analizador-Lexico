@@ -1,8 +1,12 @@
 import { 
-  KEYWORDS, TYPES, isLetter, isDigit, isIdChar, MULTI_OPS, SINGLE_OPS, DELIMITERS, 
-  ERROR_MESSAGES, isValidType, isValidKeyword 
+  KEYWORDS, TYPES, isLetter, isDigit, isIdChar, 
+  RELATIONAL_OPS,  
+  MULTI_OPS,      
+  SINGLE_OPS,      
+  DELIMITERS, ERROR_MESSAGES
 } from "./grammar.js";
 import { TokenType } from "./tokenTypes.js"; 
+
 export function lex(input) {
   const tokens = [];
   let i = 0, line = 1, col = 1;
@@ -27,7 +31,6 @@ export function lex(input) {
     const startLine = line, startCol = col;
     let ch = peek();
 
-    // Espacios en blanco
     if (/\s/.test(ch)) { advance(); continue; }
 
     if (ch === "/" && peek(1) === "/") {
@@ -79,34 +82,36 @@ export function lex(input) {
       continue;
     }
 
-    // Operadores de múltiples caracteres
-    const two = ch + peek(1);
-    if (MULTI_OPS.includes(two)) {
+    const twoChar = ch + peek(1);
+    
+    if (MULTI_OPS.includes(twoChar)) {
       advance(); advance();
-      push(TokenType.OP, two, startLine, startCol);
+      push(TokenType.BOOL_OP, twoChar, startLine, startCol); 
       continue;
     }
-
-    // Operadores de un solo carácter
+    
+    if (RELATIONAL_OPS.includes(ch)) {
+      advance();
+      push(TokenType.BOOL_OP, ch, startLine, startCol); 
+      continue;
+    }
+    
     if (SINGLE_OPS.includes(ch)) {
       advance();
       push(TokenType.OP, ch, startLine, startCol);
       continue;
     }
 
-    // Delimitadores
     if (DELIMITERS.includes(ch)) {
       advance();
       push(TokenType.DELIM, ch, startLine, startCol);
       continue;
     }
 
-    // Carácter no reconocido
     const invalidChar = advance();
     push(TokenType.ERROR, invalidChar, startLine, startCol, ERROR_MESSAGES.INVALID_SYMBOL(invalidChar));
   }
 
-  // Agregar token EOF
   push(TokenType.EOF, "EOF", line, col);
 
   return tokens;
