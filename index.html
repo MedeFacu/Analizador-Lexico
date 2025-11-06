@@ -5,19 +5,167 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Analizador Léxico</title>
   <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    /* ====== ESTILO GENERAL ====== */
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: #1e1e2f;
+      color: #e0e0e0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2b2b3c;
+      width: 100%;
+      padding: 1rem 0;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    header h1 {
+      margin: 0;
+      color: #00bcd4;
+      letter-spacing: 1px;
+    }
+
+    main {
+      max-width: 900px;
+      width: 95%;
+      margin: 2rem auto;
+      background: #2b2b3c;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    /* ====== ÁREA DE TEXTO ====== */
+    textarea {
+      width: 100%;
+      height: 200px;
+      background: #1e1e2f;
+      color: #d4d4d4;
+      border: 1px solid #444;
+      border-radius: 8px;
+      font-family: "Fira Code", monospace;
+      font-size: 16px;
+      padding: 1rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    textarea:focus {
+      border-color: #00bcd4;
+    }
+
+    /* ====== BOTONES ====== */
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    button {
+      background: #00bcd4;
+      border: none;
+      color: white;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    button:hover {
+      background: #0097a7;
+      transform: translateY(-1px);
+    }
+
+    button#clear {
+      background: #ff6b6b;
+    }
+
+    button#clear:hover {
+      background: #e05252;
+    }
+
+    /* ====== MENSAJE DE ERROR ====== */
+    #errorBox {
+      background: #ff6b6b33;
+      border: 1px solid #ff6b6b;
+      border-radius: 6px;
+      color: #ff6b6b;
+      padding: 10px;
+      margin-top: 1rem;
+      display: none;
+      font-weight: bold;
+    }
+
+    /* ====== TABLA DE TOKENS ====== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background: #1e1e2f;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    thead {
+      background: #00bcd4;
+      color: white;
+    }
+
+    th, td {
+      padding: 10px 15px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(255,255,255,0.03);
+    }
+
+    th {
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 600px) {
+      textarea {
+        height: 150px;
+      }
+      th, td {
+        font-size: 0.85em;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Analizador Léxico</h1>
+    <h1>🔍 Analizador Léxico</h1>
   </header>
 
   <main>
     <textarea id="source" placeholder="Escribe tu código aquí..."></textarea>
+
     <div class="controls">
       <button id="analyze">Analizar</button>
       <button id="clear">Limpiar</button>
     </div>
-    <div id="errorBox" style="display:none; color:#ff6b6b; margin-top:10px; font-weight:bold;"></div>
+
+    <div id="errorBox"></div>
+
     <table id="tokens">
       <thead>
         <tr>
