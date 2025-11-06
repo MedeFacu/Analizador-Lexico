@@ -86,7 +86,11 @@ export function isValidKeyword(word) {
   return KEYWORDS.has(word);
 }
 
-// Operadores y delimitadores
+export const RELATIONAL_OPS = ["<", ">"];  
 export const MULTI_OPS = ["==", "!=", "<=", ">=", "&&", "||"];
-export const SINGLE_OPS = ["=", "<", ">", "+", "-", "*", "/", "%", "!"];
+export const SINGLE_OPS = ["=", "+", "-", "*", "/", "%", "!"]; 
 export const DELIMITERS = [";", ",", "(", ")", "{", "}", "[", "]"];
+
+export function isRelationalOp(op) {
+  return RELATIONAL_OPS.includes(op);
+}
