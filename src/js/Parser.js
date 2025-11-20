@@ -173,27 +173,53 @@ class Parser {
   }
 
   ifStmt() {
-    this.match('if');
-    this.match('(');
-    const cond = this.boolExpr();
-    this.match(')');
-    const thenStmt = this.stmt();
-    let elseStmt = null;
-    if (this.lookahead && this.lookahead.lexeme === 'else') {
-      this.match('else');
-      elseStmt = this.stmt();
-    }
-    return { type: 'IfStmt', condition: cond, then: thenStmt, else: elseStmt };
+  this.match('if');
+  this.match('(');
+  const condStart = this.lookahead;
+  const cond = this.boolExpr();
+
+  if (cond.exprType && cond.exprType !== 'boolean') {
+    const line = condStart ? condStart.line : this.lookahead?.line;
+    const col  = condStart ? condStart.col  : this.lookahead?.col;
+
+    throw new SyntaxError(
+      `Se esperaba una expresion booleana` + `en línea ${line}, columna ${col}`
+    );
   }
 
-  whileStmt() {
-    this.match('while');
-    this.match('(');
-    const cond = this.boolExpr(); 
-    this.match(')');
-    const body = this.stmt();
-    return { type: 'WhileStmt', condition: cond, body };
+  this.match(')');
+  const thenStmt = this.stmt();
+  let elseStmt = null;
+  if (this.lookahead && this.lookahead.lexeme === 'else') {
+    this.match('else');
+    elseStmt = this.stmt();
   }
+  return { type: 'IfStmt', condition: cond, then: thenStmt, else: elseStmt };
+}
+
+
+
+  whileStmt() {
+  this.match('while');
+  this.match('(');
+
+  const condStart = this.lookahead;  
+  const cond = this.boolExpr();
+
+  if (cond.exprType && cond.exprType !== 'boolean') {
+    const line = condStart ? condStart.line : this.lookahead?.line;
+    const col  = condStart ? condStart.col  : this.lookahead?.col;
+
+    throw new SyntaxError(
+      `Se esperaba una expresion booleana` + `en línea ${line}, columna ${col}`
+    );
+  }
+
+  this.match(')');
+  const body = this.stmt();
+  return { type: 'WhileStmt', condition: cond, body };
+}
+
 
   forStmt() {
     this.match('for');
@@ -214,9 +240,24 @@ class Parser {
   }
 
   forCond() {
-    if (this.lookahead.lexeme === ';') return null;
-    return this.boolExpr(); 
+  if (this.lookahead.lexeme === ';') return null;
+
+  const condStart = this.lookahead;
+  const cond = this.boolExpr();
+
+  if (cond.exprType && cond.exprType !== 'boolean') {
+    const line = condStart ? condStart.line : this.lookahead?.line;
+    const col  = condStart ? condStart.col  : this.lookahead?.col;
+
+    throw new SyntaxError(
+    `Se esperaba una expresion booleana` + `en línea ${line}, columna ${col}`  
+    );
   }
+
+  return cond;
+}
+
+
 
   forIter() {
     if (this.lookahead.lexeme === ')') return null;
